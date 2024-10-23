@@ -1,10 +1,6 @@
-![voidsprite logo](freesprite/assets/mainlogo.png)
+# voidsprite :: waymaker
 
-# voidsprite
-
-Free C++ sprite editor
-
-![Preview image](img_preview_1.png)
+An add-on roguelike project for voidsprite
 
 ## Supported file formats
 ### Import:
