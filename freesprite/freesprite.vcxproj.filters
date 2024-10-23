@@ -468,6 +468,9 @@
     <ClCompile Include="Canvas.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
+    <ClCompile Include="WMKScreen.cpp">
+      <Filter>Source files\screen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="globals.h">
@@ -868,6 +871,9 @@
     </ClInclude>
     <ClInclude Include="json\json.hpp">
       <Filter>Header files\external\json</Filter>
+    </ClInclude>
+    <ClInclude Include="WMKScreen.h">
+      <Filter>Header files\screen</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

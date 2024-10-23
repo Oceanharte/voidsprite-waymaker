@@ -4,6 +4,7 @@
 #include "maineditor.h"
 #include "BaseScreen.h"
 #include "StartScreen.h"
+#include "WMKScreen.h"
 #include "BasePopup.h"
 #include "BrushFill.h"
 #include "Brush1pxLinePathfind.h"
@@ -419,7 +420,7 @@ int main(int argc, char** argv)
 
     g_ttp = new TooltipsLayer();
 
-    StartScreen* launchpad = new StartScreen();
+    WMKScreen* launchpad = new WMKScreen();
     g_addScreen(launchpad, screenStack.empty());
 
     platformPostInit();
