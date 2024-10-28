@@ -32,7 +32,27 @@ void WMKScreen::render() {
     { (g_windowW / 4) + 427, 368, 201, 64 },
     { (g_windowW / 4) + 12, 48, 201, 64 },
     { (g_windowW / 4) + 221, 48, 201, 64 },
-    { (g_windowW / 4) + 427, 48, 201, 64 }
+    { (g_windowW / 4) + 427, 48, 201, 64 },
+    { (g_windowW / 4) + 224, 464, 193, 48 },
+    { (g_windowW / 4) + 224, 528, 193, 64 },
+    { (g_windowW / 4) + 224, 608, 193, 64 },
+    { g_windowW / 4, 464, 96, 96 },
+    { (g_windowW / 4) + 432, 464, 96, 96 },
+    { g_windowW / 4, 464, 208, 96 },
+    { (g_windowW / 4) + 432, 464, 208, 96 },
+    { (g_windowW / 4) + 12, 368, 64, 64 },
+    { (g_windowW / 4) + 221, 368, 64, 64 },
+    { (g_windowW / 4) + 427, 368, 64, 64 },
+    { (g_windowW / 4) + 12, 48, 64, 64 },
+    { (g_windowW / 4) + 221, 48, 64, 64 },
+    { (g_windowW / 4) + 427, 48, 64, 64 },
+    { (g_windowW / 4) + 75, 368, 138, 30 },
+    { (g_windowW / 4) + 284, 368, 138, 30 },
+    { (g_windowW / 4) + 490, 368, 138, 30 },
+    { (g_windowW / 4) + 75, 48, 138, 30 },
+    { (g_windowW / 4) + 284, 48, 138, 30 },
+    { (g_windowW / 4) + 490, 48, 138, 30 },
+
     };
 
     SDL_Color colorR1 = { 0x30, 0x30, 0x30, 0xa0};
@@ -48,17 +68,20 @@ void WMKScreen::render() {
     SDL_SetRenderDrawColor(g_rd, 0xff, 0xff, 0xff, 0x80);
     
     for (int i = 0; i < rects.size(); i++) {
-        switch (i) {
-        case 0:
-        case 1:
-            renderGradient(rects[i], sdlcolorToUint32(colorR3), sdlcolorToUint32(colorR2), sdlcolorToUint32(colorR2), sdlcolorToUint32(colorR1));
-            break;
-        case 2:
-            renderGradient(rects[i], sdlcolorToUint32(bkColour1), sdlcolorToUint32(bkColour2), sdlcolorToUint32(bkColour3), sdlcolorToUint32(bkColour1));
-            break;
-        default:
-            renderGradient(rects[i], sdlcolorToUint32(bkStat1), sdlcolorToUint32(bkStat2), sdlcolorToUint32(bkStat3), sdlcolorToUint32(bkStat2));
-            break;
+        if (i < 17) {
+
+            switch (i) {
+            case 0:
+            case 1:
+                renderGradient(rects[i], sdlcolorToUint32(colorR3), sdlcolorToUint32(colorR2), sdlcolorToUint32(colorR2), sdlcolorToUint32(colorR1));
+                break;
+            case 2:
+                renderGradient(rects[i], sdlcolorToUint32(bkColour1), sdlcolorToUint32(bkColour2), sdlcolorToUint32(bkColour3), sdlcolorToUint32(bkColour1));
+                break;
+            default:
+                renderGradient(rects[i], sdlcolorToUint32(bkStat1), sdlcolorToUint32(bkStat2), sdlcolorToUint32(bkStat3), sdlcolorToUint32(bkStat2));
+                break;
+            }
         }
         SDL_RenderDrawRect(g_rd, &rects[i]);
     }
