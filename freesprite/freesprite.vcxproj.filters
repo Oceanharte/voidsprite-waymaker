@@ -97,6 +97,12 @@
     <Filter Include="Header files\external\json">
       <UniqueIdentifier>{9812c616-232b-44c1-83dd-ac960d53e31b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header files\waymaker">
+      <UniqueIdentifier>{4584db0c-a692-4427-bb01-dad515e1a3f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source files\waymaker">
+      <UniqueIdentifier>{405c2528-0e44-4fe6-96bd-11bdc940b551}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -470,6 +476,9 @@
     </ClCompile>
     <ClCompile Include="WMKScreen.cpp">
       <Filter>Source files\screen</Filter>
+    </ClCompile>
+    <ClCompile Include="WMKEnemy.cpp">
+      <Filter>Source files\waymaker</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -874,6 +883,9 @@
     </ClInclude>
     <ClInclude Include="WMKScreen.h">
       <Filter>Header files\screen</Filter>
+    </ClInclude>
+    <ClInclude Include="WMKEnemy.h">
+      <Filter>Header files\waymaker</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

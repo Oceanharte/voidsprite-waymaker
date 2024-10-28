@@ -14,21 +14,60 @@ void WMKScreen::tick() {
     }
 }
 
+
 void WMKScreen::render() {
     DrawBackground();
 
-    SDL_Rect prgAll = SDL_Rect{ 32, 32, 32, 640 };
-    SDL_Rect prgAllout = SDL_Rect{ 32, 32, 32, 640 };
-    SDL_Rect prgInst = SDL_Rect{ 80, 32, 32, 640 };
-    SDL_Rect prgInstout = SDL_Rect{ 80, 32, 32, 640 };
+    std::vector<SDL_Rect> rects = {
+    { 32, 32, 32, 640 },
+    { 80, 32, 32, 640 },
+    { g_windowW / 4, 32, 640, 416 },
+    { 128, 32, (g_windowW / 4) - 144, 416 },
+    { (g_windowW / 4) + 656 , 32, (g_windowW / 4) - 144, 416 },
+    { 128, 464, (g_windowW / 4) - 144, 208 },
+    { g_windowW / 4, 464, 208, 208 },
+    { (g_windowW / 4) + 432, 464, 208, 208 },
+    { (g_windowW / 4) + 12, 368, 201, 64 },
+    { (g_windowW / 4) + 221, 368, 201, 64 },
+    { (g_windowW / 4) + 427, 368, 201, 64 },
+    { (g_windowW / 4) + 12, 48, 201, 64 },
+    { (g_windowW / 4) + 221, 48, 201, 64 },
+    { (g_windowW / 4) + 427, 48, 201, 64 }
+    };
+
     SDL_Color colorR1 = { 0x30, 0x30, 0x30, 0xa0};
     SDL_Color colorR2 = { 0x20, 0x20, 0x20, 0xa0};
     SDL_Color colorR3 = { 0x10, 0x10, 0x10, 0xa0 };
-    renderGradient(prgAll, sdlcolorToUint32(colorR3), sdlcolorToUint32(colorR2), sdlcolorToUint32(colorR2), sdlcolorToUint32(colorR1));
-    renderGradient(prgInst, sdlcolorToUint32(colorR3), sdlcolorToUint32(colorR2), sdlcolorToUint32(colorR2), sdlcolorToUint32(colorR1));
+    SDL_Color bkColour1 = { 0x30, 0x30, 0x30, 0xa2};
+    SDL_Color bkColour2 = { 0x20, 0x20, 0x20, 0xa2};
+    SDL_Color bkColour3 = { 0x10, 0x10, 0x10, 0xa2};
+    SDL_Color bkStat1 = { 0x20, 0x20, 0x20, 0xFF};
+    SDL_Color bkStat2 = { 0x0, 0x0, 0x0, 0xFF};
+    SDL_Color bkStat3 = { 0x0, 0x0, 0x0, 0xFF};
+
     SDL_SetRenderDrawColor(g_rd, 0xff, 0xff, 0xff, 0x80);
-    SDL_RenderDrawRect(g_rd, &prgAllout);
-    SDL_RenderDrawRect(g_rd, &prgInstout);
+    
+    for (int i = 0; i < rects.size(); i++) {
+        switch (i) {
+        case 0:
+        case 1:
+            renderGradient(rects[i], sdlcolorToUint32(colorR3), sdlcolorToUint32(colorR2), sdlcolorToUint32(colorR2), sdlcolorToUint32(colorR1));
+            break;
+        case 2:
+            renderGradient(rects[i], sdlcolorToUint32(bkColour1), sdlcolorToUint32(bkColour2), sdlcolorToUint32(bkColour3), sdlcolorToUint32(bkColour1));
+            break;
+        default:
+            renderGradient(rects[i], sdlcolorToUint32(bkStat1), sdlcolorToUint32(bkStat2), sdlcolorToUint32(bkStat3), sdlcolorToUint32(bkStat2));
+            break;
+        }
+        SDL_RenderDrawRect(g_rd, &rects[i]);
+    }
+
+    g_fnt->RenderString("Combat Viewport", g_windowW/4, 8);
+    g_fnt->RenderString("Combat Log", (g_windowW/4)+656, 8);
+    g_fnt->RenderString("Payload Cache", 128, 8);
+    g_fnt->RenderString("Run Status:", 128, 464);
+
 }
 
 void WMKScreen::takeInput(SDL_Event evt)
