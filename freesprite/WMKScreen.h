@@ -11,9 +11,12 @@ class WMKScreen : public BaseScreen, public EventCallbackListener
 {
 public:
 	bool closeNextTick = false;
-	SDL_Texture* tex;
+	SDL_Texture* tex = IMGLoadToTexture(VOIDSPRITE_ASSETS_PATH "assets/player/nosel.png");
 	SDL_Color backgroundColor = SDL_Color{0,0,0,255};
-
+	SDL_Texture* teth = IMGLoadToTexture(VOIDSPRITE_ASSETS_PATH "assets/player/teth.png");;
+	SDL_Texture* machi = IMGLoadToTexture(VOIDSPRITE_ASSETS_PATH "assets/player/machi.png");;
+	SDL_Texture* gritty = IMGLoadToTexture(VOIDSPRITE_ASSETS_PATH "assets/player/gritty.png");;
+	SDL_Texture* furline = IMGLoadToTexture(VOIDSPRITE_ASSETS_PATH "assets/player/furline.png");;
 	void render() override;
 	void tick() override;
 	void takeInput(SDL_Event) override;

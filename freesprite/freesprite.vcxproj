@@ -281,6 +281,7 @@
     <ClCompile Include="UITextField.cpp" />
     <ClCompile Include="UtilPathfind.cpp" />
     <ClCompile Include="WMKEnemy.cpp" />
+    <ClCompile Include="WMKPlayer.cpp" />
     <ClCompile Include="WMKScreen.cpp" />
     <ClCompile Include="zip\zip.c" />
   </ItemGroup>
@@ -417,6 +418,7 @@
     <ClInclude Include="UITextField.h" />
     <ClInclude Include="UtilPathfind.h" />
     <ClInclude Include="WMKEnemy.h" />
+    <ClInclude Include="WMKPlayer.h" />
     <ClInclude Include="WMKScreen.h" />
     <ClInclude Include="zip\miniz.h" />
     <ClInclude Include="zip\zip.h" />

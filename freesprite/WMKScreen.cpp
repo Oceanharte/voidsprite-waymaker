@@ -5,8 +5,8 @@
 #include "Notification.h"
 #include "EventCallbackListener.h"
 #include "FontRenderer.h"
-
-
+#include "WMKPlayer.h"
+#include <random>
 
 void WMKScreen::tick() {
     if (closeNextTick) {
@@ -14,9 +14,12 @@ void WMKScreen::tick() {
     }
 }
 
-
 void WMKScreen::render() {
     DrawBackground();
+
+    plrStats dpsdealer;
+	plrStats tank;
+	plrStats support;
 
     std::vector<SDL_Rect> rects = {
     { 32, 32, 32, 640 },
@@ -36,8 +39,8 @@ void WMKScreen::render() {
     { (g_windowW / 4) + 224, 464, 193, 48 },
     { (g_windowW / 4) + 224, 528, 193, 64 },
     { (g_windowW / 4) + 224, 608, 193, 64 },
-    { g_windowW / 4, 464, 96, 96 },
-    { (g_windowW / 4) + 432, 464, 96, 96 },
+            { g_windowW / 4, 464, 96, 96 },
+        { (g_windowW / 4) + 432, 464, 96, 96 },
     { g_windowW / 4, 464, 208, 96 },
     { (g_windowW / 4) + 432, 464, 208, 96 },
     { (g_windowW / 4) + 12, 368, 64, 64 },
@@ -54,6 +57,28 @@ void WMKScreen::render() {
     { (g_windowW / 4) + 490, 48, 138, 30 },
 
     };
+
+     std::vector<SDL_Texture*>faces = {
+        teth,
+        machi,
+        gritty,
+        furline
+    };
+
+    std::vector<plrStats>party = {
+        dpsdealer,
+        support,
+        tank
+    };
+
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> facerng(0, (faces.size()-1));
+    
+    for (int i = 0; i != party.size(); i++) {
+        int f = facerng(gen);  
+        party[i].face = faces[f];
+    }
 
     SDL_Color colorR1 = { 0x30, 0x30, 0x30, 0xa0};
     SDL_Color colorR2 = { 0x20, 0x20, 0x20, 0xa0};
@@ -85,13 +110,19 @@ void WMKScreen::render() {
         }
         SDL_RenderDrawRect(g_rd, &rects[i]);
     }
-
+    SDL_RenderCopy(g_rd, party[0].face, NULL, &rects[17]);
+    SDL_RenderCopy(g_rd, tex, NULL, &rects[18]);
     g_fnt->RenderString("Combat Viewport", g_windowW/4, 8);
     g_fnt->RenderString("Combat Log", (g_windowW/4)+656, 8);
     g_fnt->RenderString("Payload Cache", 128, 8);
     g_fnt->RenderString("Run Status:", 128, 464);
-
 }
+
+void WMKPlayer::render() {
+    //uhhhhh i forgor
+}
+
+
 
 void WMKScreen::takeInput(SDL_Event evt)
 {

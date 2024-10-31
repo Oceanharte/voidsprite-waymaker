@@ -478,7 +478,10 @@
       <Filter>Source files\screen</Filter>
     </ClCompile>
     <ClCompile Include="WMKEnemy.cpp">
-      <Filter>Source files\waymaker</Filter>
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="WMKPlayer.cpp">
+      <Filter>Source files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -885,7 +888,10 @@
       <Filter>Header files\screen</Filter>
     </ClInclude>
     <ClInclude Include="WMKEnemy.h">
-      <Filter>Header files\waymaker</Filter>
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="WMKPlayer.h">
+      <Filter>Header files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
