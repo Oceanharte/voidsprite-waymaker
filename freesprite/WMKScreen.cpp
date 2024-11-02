@@ -6,9 +6,17 @@
 #include "EventCallbackListener.h"
 #include "FontRenderer.h"
 #include "WMKPlayer.h"
-#include <random>
 
 
+plrStats dpsdealer;
+plrStats tank;
+plrStats support;
+
+std::vector<plrStats>party = {
+    dpsdealer,
+    support,
+    tank
+};
 
 std::vector<SDL_Rect> rects = {
     { 32, 32, 32, 640 },
@@ -47,6 +55,17 @@ std::vector<SDL_Rect> rects = {
 
 };
 
+WMKScreen::WMKScreen() {
+    
+		std::random_device rd;
+		std::mt19937 gen(rd());
+		std::uniform_int_distribution<> facerng(0, (faces.size()-1));   
+		int f = facerng(gen);
+		for (int i = 0; i != party.size(); i++) { 
+			party[i].face = faces[f];
+		}
+}
+
 void WMKScreen::tick() {
     if (closeNextTick) {
         g_closeScreen(this);
@@ -70,7 +89,7 @@ void WMKScreen::render() {
     SDL_SetRenderDrawColor(g_rd, 0xff, 0xff, 0xff, 0x80);
     
     for (int i = 0; i < rects.size(); i++) {
-        if (i < 17) {
+        if (i < 19) {
 
             switch (i) {
             case 0:
@@ -82,46 +101,21 @@ void WMKScreen::render() {
                 break;
             default:
                 renderGradient(rects[i], sdlcolorToUint32(bkStat1), sdlcolorToUint32(bkStat2), sdlcolorToUint32(bkStat3), sdlcolorToUint32(bkStat2));
-                break;
+                break;              
             }
         }
         SDL_RenderDrawRect(g_rd, &rects[i]);
     }
-    setFaces();
+    setRandFaces();
     g_fnt->RenderString("Combat Viewport", g_windowW/4, 8);
     g_fnt->RenderString("Combat Log", (g_windowW/4)+656, 8);
     g_fnt->RenderString("Payload Cache", 128, 8);
     g_fnt->RenderString("Run Status:", 128, 464);
 }
 
-void WMKScreen::setFaces() {
+void WMKScreen::setRandFaces() {
     //i unforgor :D
-    plrStats dpsdealer;
-	plrStats tank;
-	plrStats support;
 
-
-     std::vector<SDL_Texture*>faces = {
-        teth,
-        machi,
-        gritty,
-        furline
-    };
-
-    std::vector<plrStats>party = {
-        dpsdealer,
-        support,
-        tank
-    };
-
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<> facerng(0, (faces.size()-1));
-    
-    for (int i = 0; i != party.size(); i++) {
-        int f = facerng(gen);  
-        party[i].face = faces[f];
-    }
     SDL_RenderCopy(g_rd, party[0].face, NULL, &rects[17]);
     SDL_RenderCopy(g_rd, tex, NULL, &rects[18]);
 }
