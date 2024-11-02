@@ -27,7 +27,7 @@ public:
 		gritty,
 		furline
 	};
-	void setRandFaces();
+	void setRandFacesAndNames();
 	void render() override;
 	void tick() override;
 	void takeInput(SDL_Event) override;

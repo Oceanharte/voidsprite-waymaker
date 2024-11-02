@@ -59,10 +59,16 @@ WMKScreen::WMKScreen() {
     
 		std::random_device rd;
 		std::mt19937 gen(rd());
-		std::uniform_int_distribution<> facerng(0, (faces.size()-1));   
+		std::uniform_int_distribution<> facerng(0, (faces.size()-1));
+        std::uniform_int_distribution<> namerng(0x0, 0xFFFFFF);   
 		int f = facerng(gen);
+        int n = namerng(gen);
+        std::string names = std::format("#{:X6}",n);
+
 		for (int i = 0; i != party.size(); i++) { 
 			party[i].face = faces[f];
+            party[i].name = names;
+
 		}
 }
 
@@ -106,19 +112,22 @@ void WMKScreen::render() {
         }
         SDL_RenderDrawRect(g_rd, &rects[i]);
     }
-    setRandFaces();
+    setRandFacesAndNames();
     g_fnt->RenderString("Combat Viewport", g_windowW/4, 8);
     g_fnt->RenderString("Combat Log", (g_windowW/4)+656, 8);
     g_fnt->RenderString("Payload Cache", 128, 8);
     g_fnt->RenderString("Run Status:", 128, 464);
 }
 
-void WMKScreen::setRandFaces() {
+void WMKScreen::setRandFacesAndNames() {
     //i unforgor :D
 
     SDL_RenderCopy(g_rd, party[0].face, NULL, &rects[17]);
     SDL_RenderCopy(g_rd, tex, NULL, &rects[18]);
-}
+    g_fnt->RenderString(party[0].name, (g_windowW / 4) + 75, 368);
+    g_fnt->RenderString(party[1].name, (g_windowW / 4) + 284, 368);
+    g_fnt->RenderString(party[2].name, (g_windowW / 4) + 490, 368);
+}   
 
 
 
