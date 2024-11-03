@@ -60,14 +60,13 @@ WMKScreen::WMKScreen() {
 		std::random_device rd;
 		std::mt19937 gen(rd());
 		std::uniform_int_distribution<> facerng(0, (faces.size()-1));
-        std::uniform_int_distribution<> namerng(0x0, 0xFFFFFF);   
-		int f = facerng(gen);
-        int n = namerng(gen);
-        std::string names = std::format("#{:X6}",n);
+        std::uniform_int_distribution<> namerng(0x000000, 0xFFFFFF);   
 
 		for (int i = 0; i != party.size(); i++) { 
+            int f = facerng(gen);
+            int n = namerng(gen);
 			party[i].face = faces[f];
-            party[i].name = names;
+            party[i].name = std::vformat(" {0:6X}",std::make_format_args(n));
 
 		}
 }
