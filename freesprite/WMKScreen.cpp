@@ -12,11 +12,17 @@ plrStats dpsdealer;
 plrStats tank;
 plrStats support;
 
+int playerSel = 0;
+int hp = 20;
+
 std::vector<plrStats>party = {
     dpsdealer,
     support,
     tank
 };
+
+std::random_device rd;
+std::mt19937 gen(rd());
 
 std::vector<SDL_Rect> rects = {
     { 32, 32, 32, 640 },
@@ -52,21 +58,44 @@ std::vector<SDL_Rect> rects = {
     { (g_windowW / 4) + 75, 48, 138, 30 },
     { (g_windowW / 4) + 284, 48, 138, 30 },
     { (g_windowW / 4) + 490, 48, 138, 30 },
+    {0, 0, 64, 64}
 
 };
 
-WMKScreen::WMKScreen() {
-    
-		std::random_device rd;
-		std::mt19937 gen(rd());
+WMKScreen::WMKScreen() {       
+        
+        int i = 0;
+		
 		std::uniform_int_distribution<> facerng(0, (faces.size()-1));
-        std::uniform_int_distribution<> namerng(0x000000, 0xFFFFFF);   
-
-		for (int i = 0; i != party.size(); i++) { 
+        std::uniform_int_distribution<> namerng(0x000000, 0xFFFFFF);  
+        std::uniform_int_distribution<> speedrng(0, 9); 
+        
+		for (i; i != party.size(); i++) {            
+            
+            
             int f = facerng(gen);
             int n = namerng(gen);
+
 			party[i].face = faces[f];
             party[i].name = std::vformat(" {0:6X}",std::make_format_args(n));
+            for (int ispd = 0; ispd < 2; ispd++) {
+               int s = speedrng(gen);
+               party[i].speedRange.push_back(s);
+            }
+            std::sort(party[i].speedRange.begin(), party[i].speedRange.end());
+            std::uniform_int_distribution<> speednow(0, party[i].speedRange[1]);
+            int sc = speednow(gen);
+            party[i].spdCur = sc;
+
+            if ((party[i].speedRange[1]) < 4) {
+                party[i].health = hp + party[i].speedRange[1];
+            }
+            else if ((party[i].speedRange[1]) > 4) {
+                party[i].health = hp - party[i].speedRange[1];
+            }
+            else if ((party[i].speedRange[1]) == 4) {
+                party[i].health = hp;
+            }
 
 		}
 }
@@ -77,9 +106,13 @@ void WMKScreen::tick() {
     }
 }
 
+void WMKScreen::gameProcess() {
+    
+   
+}
+
 void WMKScreen::render() {
     DrawBackground();
-    
 
     SDL_Color colorR1 = { 0x30, 0x30, 0x30, 0xa0};
     SDL_Color colorR2 = { 0x20, 0x20, 0x20, 0xa0};
@@ -109,23 +142,38 @@ void WMKScreen::render() {
                 break;              
             }
         }
-        SDL_RenderDrawRect(g_rd, &rects[i]);
+        if (i != 33) {
+            SDL_RenderDrawRect(g_rd, &rects[i]);
+        }
+        
     }
     setRandFacesAndNames();
+    SDL_RenderDrawLine(g_rd,(g_windowW / 4) + 150, 368,(g_windowW / 4) + 150, 396);
+    SDL_RenderDrawLine(g_rd,(g_windowW / 4) + 356, 368,(g_windowW / 4) + 356, 396);
+    SDL_RenderDrawLine(g_rd,(g_windowW / 4) + 562, 368,(g_windowW / 4) + 562, 396);
+    SDL_RenderCopy(g_rd, party[0].face, &rects[33], &rects[21]);
+    SDL_RenderCopy(g_rd, party[1].face, &rects[33], &rects[22]);
+    SDL_RenderCopy(g_rd, party[2].face, &rects[33], &rects[23]);
     g_fnt->RenderString("Combat Viewport", g_windowW/4, 8);
     g_fnt->RenderString("Combat Log", (g_windowW/4)+656, 8);
     g_fnt->RenderString("Payload Cache", 128, 8);
     g_fnt->RenderString("Run Status:", 128, 464);
+    g_fnt->RenderString("RANGE(" + std::to_string(party[playerSel].speedRange[0]) + "," + std::to_string(party[playerSel].speedRange[1]) + ")", (g_windowW / 4) + 98, 464);
+    g_fnt->RenderString("ARMOR(" + std::to_string(party[playerSel].health) + ")", (g_windowW / 4) + 98, 484);
 }
 
 void WMKScreen::setRandFacesAndNames() {
     //i unforgor :D
-
+    int xval = 150; 
     SDL_RenderCopy(g_rd, party[0].face, NULL, &rects[17]);
     SDL_RenderCopy(g_rd, tex, NULL, &rects[18]);
     g_fnt->RenderString(party[0].name, (g_windowW / 4) + 75, 368);
     g_fnt->RenderString(party[1].name, (g_windowW / 4) + 284, 368);
     g_fnt->RenderString(party[2].name, (g_windowW / 4) + 490, 368);
+    for (int i = 0; i != party.size(); i++) {
+        g_fnt->RenderString(" SPD(" + std::to_string(party[i].spdCur) + ")", (g_windowW / 4) + xval, 368);
+        xval += 207;
+    }
 }   
 
 

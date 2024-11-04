@@ -20,12 +20,22 @@ public:
     SDL_Texture* machi = IMGLoadToTexture(VOIDSPRITE_ASSETS_PATH "assets/player/machi.png");
     SDL_Texture* gritty = IMGLoadToTexture(VOIDSPRITE_ASSETS_PATH "assets/player/gritty.png");
     SDL_Texture* furline = IMGLoadToTexture(VOIDSPRITE_ASSETS_PATH "assets/player/furline.png");
+	SDL_Texture* abobi = IMGLoadToTexture(VOIDSPRITE_ASSETS_PATH "assets/player/abobi.png");
+    SDL_Texture* smilm = IMGLoadToTexture(VOIDSPRITE_ASSETS_PATH "assets/player/smilm.png");
+	SDL_Texture* sunman = IMGLoadToTexture(VOIDSPRITE_ASSETS_PATH "assets/player/sunman.png");
+	SDL_Texture* corl = IMGLoadToTexture(VOIDSPRITE_ASSETS_PATH "assets/player/corl.png");
+    SDL_Texture* facs = IMGLoadToTexture(VOIDSPRITE_ASSETS_PATH "assets/player/facs.png");
 
 	std::vector<SDL_Texture*>faces = {
 		teth,
 		machi,
 		gritty,
-		furline
+		furline,
+		abobi,
+		smilm,
+		sunman,
+		corl,
+		facs
 	};
 	void setRandFacesAndNames();
 	void render() override;
@@ -35,5 +45,6 @@ public:
 	std::string getName() override { return "voidsprite :: waymaker"; }
 	void renderBackground();
 	void DrawBackground();
+	void gameProcess();
 	WMKScreen();
 };

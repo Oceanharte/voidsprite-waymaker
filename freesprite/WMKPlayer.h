@@ -12,6 +12,7 @@ struct plrStats {
 	SDL_Texture* face;
 	std::string name;
 	std::vector<int> speedRange;
+	int spdCur;
 	//skills vector
 	//passives vector
 	
@@ -25,6 +26,7 @@ public:
 
 	SDL_Color backgroundColor = SDL_Color{0,0,0,255};
 
-
+	
 	void render() override;
+	WMKPlayer();
 };
