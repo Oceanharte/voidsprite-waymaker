@@ -8,10 +8,15 @@
 #include "EventCallbackListener.h"
 #include <random>
 #include "WMKPlayer.h"
+#include "WMKEnemy.h"
+
+
 
 class WMKScreen : public BaseScreen, public EventCallbackListener
 {
 public:
+
+	WMKEnemy ens;
 
 	bool closeNextTick = false;
 	SDL_Color backgroundColor = SDL_Color{0,0,0,255};

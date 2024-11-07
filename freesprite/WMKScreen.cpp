@@ -6,6 +6,7 @@
 #include "EventCallbackListener.h"
 #include "FontRenderer.h"
 #include "WMKPlayer.h"
+#include "WMKEnemy.h"
 
 
 plrStats dpsdealer;
@@ -21,6 +22,8 @@ std::vector<plrStats>party = {
     tank
 };
 
+std::vector<enStats> combat;
+
 std::random_device rd;
 std::mt19937 gen(rd());
 
@@ -32,6 +35,7 @@ std::vector<SDL_Rect> rects = {
     { (g_windowW / 4) + 656 , 32, (g_windowW / 4) - 144, 416 },
     { 128, 464, (g_windowW / 4) - 144, 208 },
     { g_windowW / 4, 464, 208, 208 },
+    { (g_windowW / 4)+656, 464, (g_windowW / 4) - 144, 208 },
     { (g_windowW / 4) + 432, 464, 208, 208 },
     { (g_windowW / 4) + 12, 368, 201, 64 },
     { (g_windowW / 4) + 221, 368, 201, 64 },
@@ -58,12 +62,54 @@ std::vector<SDL_Rect> rects = {
     { (g_windowW / 4) + 75, 48, 138, 30 },
     { (g_windowW / 4) + 284, 48, 138, 30 },
     { (g_windowW / 4) + 490, 48, 138, 30 },
-    {0, 0, 64, 64}
+    {0, 0, 62, 62}
+    
 
 };
 
-WMKScreen::WMKScreen() {       
+std::vector<SDL_Rect> rectsEn = {
+    { (g_windowW / 4) + 49, 112, 128, 256 },
+    { (g_windowW / 4) + 258, 112, 128, 256 },
+    { (g_windowW / 4) + 464, 112, 128, 256 }
+};
+
+WMKEnemy::WMKEnemy() {
+
+    std::uniform_int_distribution<> speedrng(0, 9); 
+
+    for (int filter = 1; filter != 4 ; filter++) {
+
+
+
+        std::vector<enStats> filterEn;
         
+        for (int s = 0; s < listEn.size();s++) {
+            if (listEn[s].threatLv < filter) {
+                filterEn.push_back(listEn[s]);
+            }
+        }
+        std::uniform_int_distribution<> bossrng(0, listEnSpecial.size()-1);
+
+        for (int i = 0; i < 11; i++) {
+            std::uniform_int_distribution<> fillrng(0, filterEn.size()-1);
+
+            int e = fillrng(gen);
+            segmentEn.push_back(filterEn[e]);
+    
+        }
+        for (int sp = 0; sp < segmentEn.size();sp++) {
+            std::uniform_int_distribution<> speednow(segmentEn[sp].speedRange[0], segmentEn[sp].speedRange[1]);
+            segmentEn[sp].spdCur = speednow(gen);
+        }
+        segmentEn.push_back(listEnSpecial[bossrng(gen)]);
+ 
+
+    }
+}
+
+
+
+WMKScreen::WMKScreen() {       
         int i = 0;
 		
 		std::uniform_int_distribution<> facerng(0, (faces.size()-1));
@@ -100,6 +146,7 @@ WMKScreen::WMKScreen() {
 		}
 }
 
+
 void WMKScreen::tick() {
     if (closeNextTick) {
         g_closeScreen(this);
@@ -111,21 +158,45 @@ void WMKScreen::gameProcess() {
    
 }
 
-void WMKScreen::render() {
+
+
+void WMKEnemy::renderEnemies() {
+    int xval = 197;
+    for (int i = 0; i < rectsEn.size(); i++) {
+
+    SDL_RenderCopy(g_rd, segmentEn[i].face, NULL, &rects[25 + i]);
+    SDL_RenderCopy(g_rd, segmentEn[i].combat, NULL, &rectsEn[0 + i]);
+    }
+
+    g_fnt->RenderString(segmentEn[0].name, (g_windowW / 4) + 75, 48);
+    g_fnt->RenderString(segmentEn[1].name, (g_windowW / 4) + 284, 48);
+    g_fnt->RenderString(segmentEn[2].name, (g_windowW / 4) + 490, 48);
+    for (int i = 0; i != rectsEn.size(); i++) {
+        g_fnt->RenderString(std::to_string(segmentEn[i].spdCur), (g_windowW / 4) + xval, 49);
+        SDL_RenderDrawLine(g_rd,(g_windowW / 4) + 193, 48,(g_windowW / 4) + 193, 110);
+        SDL_RenderDrawLine(g_rd,(g_windowW / 4) + 400, 48,(g_windowW / 4) + 400, 110);
+        SDL_RenderDrawLine(g_rd,(g_windowW / 4) + 607, 48,(g_windowW / 4) + 607, 110);
+        xval += 207;
+
+    }
+}
+
+void WMKScreen::render()  {
+    
     DrawBackground();
 
-    SDL_Color colorR1 = { 0x30, 0x30, 0x30, 0xa0};
-    SDL_Color colorR2 = { 0x20, 0x20, 0x20, 0xa0};
+    SDL_Color colorR1 = { 0x30, 0x30, 0x30, 0xa0 };
+    SDL_Color colorR2 = { 0x20, 0x20, 0x20, 0xa0 };
     SDL_Color colorR3 = { 0x10, 0x10, 0x10, 0xa0 };
-    SDL_Color bkColour1 = { 0x30, 0x30, 0x30, 0xa2};
-    SDL_Color bkColour2 = { 0x20, 0x20, 0x20, 0xa2};
-    SDL_Color bkColour3 = { 0x10, 0x10, 0x10, 0xa2};
-    SDL_Color bkStat1 = { 0x20, 0x20, 0x20, 0xFF};
-    SDL_Color bkStat2 = { 0x0, 0x0, 0x0, 0xFF};
-    SDL_Color bkStat3 = { 0x0, 0x0, 0x0, 0xFF};
+    SDL_Color bkColour1 = { 0x30, 0x30, 0x30, 0xa2 };
+    SDL_Color bkColour2 = { 0x20, 0x20, 0x20, 0xa2 };
+    SDL_Color bkColour3 = { 0x10, 0x10, 0x10, 0xa2 };
+    SDL_Color bkStat1 = { 0x20, 0x20, 0x20, 0xFF };
+    SDL_Color bkStat2 = { 0x0, 0x0, 0x0, 0xFF };
+    SDL_Color bkStat3 = { 0x0, 0x0, 0x0, 0xFF };
 
     SDL_SetRenderDrawColor(g_rd, 0xff, 0xff, 0xff, 0x80);
-    
+
     for (int i = 0; i < rects.size(); i++) {
         if (i < 19) {
 
@@ -139,23 +210,27 @@ void WMKScreen::render() {
                 break;
             default:
                 renderGradient(rects[i], sdlcolorToUint32(bkStat1), sdlcolorToUint32(bkStat2), sdlcolorToUint32(bkStat3), sdlcolorToUint32(bkStat2));
-                break;              
+                break;
             }
         }
-        if (i != 33) {
+        if (i != 34) {
             SDL_RenderDrawRect(g_rd, &rects[i]);
         }
-        
+
     }
+    
+
+    ens.renderEnemies();
     setRandFacesAndNames();
     SDL_RenderDrawLine(g_rd,(g_windowW / 4) + 150, 368,(g_windowW / 4) + 150, 396);
     SDL_RenderDrawLine(g_rd,(g_windowW / 4) + 356, 368,(g_windowW / 4) + 356, 396);
     SDL_RenderDrawLine(g_rd,(g_windowW / 4) + 562, 368,(g_windowW / 4) + 562, 396);
-    SDL_RenderCopy(g_rd, party[0].face, &rects[33], &rects[21]);
-    SDL_RenderCopy(g_rd, party[1].face, &rects[33], &rects[22]);
-    SDL_RenderCopy(g_rd, party[2].face, &rects[33], &rects[23]);
+    SDL_RenderCopy(g_rd, party[0].face, &rects[34], &rects[22]);
+    SDL_RenderCopy(g_rd, party[1].face, &rects[34], &rects[23]);
+    SDL_RenderCopy(g_rd, party[2].face, &rects[34], &rects[24]);
     g_fnt->RenderString("Combat Viewport", g_windowW/4, 8);
     g_fnt->RenderString("Combat Log", (g_windowW/4)+656, 8);
+    g_fnt->RenderString("Inactive Cache", (g_windowW/4)+656, 464);
     g_fnt->RenderString("Payload Cache", 128, 8);
     g_fnt->RenderString("Run Status:", 128, 464);
     g_fnt->RenderString("RANGE(" + std::to_string(party[playerSel].speedRange[0]) + "," + std::to_string(party[playerSel].speedRange[1]) + ")", (g_windowW / 4) + 98, 464);
@@ -165,8 +240,8 @@ void WMKScreen::render() {
 void WMKScreen::setRandFacesAndNames() {
     //i unforgor :D
     int xval = 150; 
-    SDL_RenderCopy(g_rd, party[0].face, NULL, &rects[17]);
-    SDL_RenderCopy(g_rd, tex, NULL, &rects[18]);
+    SDL_RenderCopy(g_rd, party[0].face, NULL, &rects[18]);
+    SDL_RenderCopy(g_rd, tex, NULL, &rects[19]);
     g_fnt->RenderString(party[0].name, (g_windowW / 4) + 75, 368);
     g_fnt->RenderString(party[1].name, (g_windowW / 4) + 284, 368);
     g_fnt->RenderString(party[2].name, (g_windowW / 4) + 490, 368);
